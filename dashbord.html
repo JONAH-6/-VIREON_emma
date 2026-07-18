@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes" />
+    <title>VIREON • Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <style>
+        :root {
+            --primary: #66ccff;
+            --primary-dark: #005f80;
+            --bg-body: #0b1c26;
+            --bg-card: rgba(10, 25, 35, 0.75);
+            --border-subtle: rgba(102, 204, 255, 0.15);
+            --text-dim: rgba(255, 255, 255, 0.65);
+            --text-soft: rgba(255, 255, 255, 0.85);
+            --radius-lg: 20px;
+            --radius-md: 16px;
+            --radius-sm: 12px;
+            --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.3);
+            --transition: 0.2s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: var(--bg-body);
+            color: #fff;
+            font-family: 'Inter', system-ui, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .dashboard-container {
+            max-width: 800px;
+            margin: 0 auto;
+            width: 100%;
+            min-height: 100vh;
+            padding-bottom: 90px;
+        }
+
+        /* ── Top Bar ── */
+        .top-bar {
+            padding: 22px 20px 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .top-bar .greeting {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #ffffff;
+        }
+
+        .top-bar .sub {
+            font-size: 0.8rem;
+            color: var(--text-dim);
+            margin-top: 3px;
+        }
+
+        .top-bar-right {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .notification-btn {
+            position: relative;
+            background: transparent;
+            border: none;
+            color: #ffffff;
+            font-size: 1.3rem;
+            cursor: pointer;
+            padding: 6px;
+            transition: var(--transition);
+        }
+
+        .notification-btn:hover {
+            color: var(--primary);
+            transform: scale(1.05);
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: 0px;
+            right: 0px;
+            width: 18px;
+            height: 18px;
+            background: #1e3a47;
+            color: #ffffff;
+            font-size: 0.7rem;
+            font-weight: 700;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid var(--bg-body);
+            line-height: 1;
+        }
+
+        .avatar {
+            width: 44px;
+            height: 44px;
+            background: linear-gradient(135deg, #00668D, #66ccff);
+            color: #fff;
+            font-weight: 700;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            box-shadow: var(--shadow-sm);
+            flex-shrink: 0;
+            border: 2px solid rgba(255,255,255,0.15);
+        }
+
+        .notification-dropdown {
+            position: absolute;
+            top: 75px;
+            right: 12px;
+            width: 280px;
+            background: rgba(8, 20, 28, 0.95);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(102, 204, 255, 0.25);
+            border-radius: 18px;
+            padding: 20px 18px;
+            box-shadow: 0 20px 35px rgba(0,0,0,0.5);
+            z-index: 1500;
+            display: none;
+            animation: fadeDown 0.2s ease;
+            text-align: left;
+        }
+
+        .notification-dropdown.show {
+            display: block;
+        }
+
+        @keyframes fadeDown {
+            from { opacity: 0; transform: translateY(-8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .notification-dropdown .notif-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-bottom: 14px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+            font-size: 0.85rem;
+            color: var(--text-soft);
+            line-height: 1.4;
+        }
+
+        .notification-dropdown .notif-item:last-of-type {
+            border-bottom: none;
+            margin-bottom: 16px;
+        }
+
+        .notification-dropdown .notif-item i {
+            color: var(--primary);
+            font-size: 1rem;
+            margin-top: 2px;
+        }
+
+        .notification-dropdown .btn-notif-activate {
+            display: block;
+            width: 100%;
+            background: var(--primary-dark);
+            color: #fff;
+            border: none;
+            padding: 11px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: 'Inter', sans-serif;
+            text-align: center;
+            box-shadow: 0 6px 14px rgba(0,0,0,0.3);
+        }
+
+        .notification-dropdown .btn-notif-activate:hover {
+            background: #0077aa;
+        }
+
+        .plan-card {
+            margin: 16px 20px 22px;
+            background: var(--bg-card);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-lg);
+            padding: 22px 20px 24px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .plan-card .plan-label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: rgba(255,255,255,0.5);
+            margin-bottom: 5px;
+        }
+
+        .plan-card .plan-badge {
+            display: inline-block;
+            background: rgba(0, 102, 141, 0.3);
+            border: 1px solid rgba(102,204,255,0.3);
+            border-radius: 20px;
+            padding: 4px 14px;
+            font-size: 0.72rem;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+
+        .plan-card .plan-price {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: #ffffff;
+            margin-bottom: 6px;
+        }
+
+        .plan-card .plan-note {
+            font-size: 0.8rem;
+            color: var(--text-dim);
+            margin-bottom: 20px;
+        }
+
+        .plan-card .button-group {
+            display: flex;
+            gap: 12px;
+        }
+
+        .plan-card .btn-strong {
+            flex: 1;
+            padding: 13px 10px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .plan-card .btn-primary {
+            background: var(--primary-dark);
+            color: #fff;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.3);
+        }
+
+        .plan-card .btn-primary:hover {
+            background: #0077aa;
+        }
+
+        .plan-card .btn-secondary {
+            background: transparent;
+            color: var(--primary);
+            border: 1px solid var(--primary);
+        }
+
+        .plan-card .btn-secondary:hover {
+            background: rgba(0,102,141,0.15);
+        }
+
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin: 0 20px 22px;
+        }
+
+        .stat-chip {
+            background: var(--bg-card);
+            backdrop-filter: blur(8px);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-sm);
+            padding: 15px 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .stat-chip:hover {
+            border-color: var(--primary);
+            background: rgba(0,102,141,0.15);
+        }
+
+        .stat-chip .stat-icon {
+            font-size: 1.2rem;
+            color: var(--primary);
+            margin-bottom: 7px;
+        }
+
+        .stat-chip .stat-value {
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .stat-chip .stat-label {
+            font-size: 0.62rem;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            margin-top: 3px;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            margin-bottom: 12px;
+        }
+
+        .section-header h3 {
+            font-size: 1rem;
+            font-weight: 700;
+        }
+
+        .section-header .more {
+            font-size: 0.76rem;
+            color: var(--primary);
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .quick-links-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin: 0 20px 22px;
+        }
+
+        .quick-link-item {
+            background: var(--bg-card);
+            backdrop-filter: blur(8px);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-sm);
+            padding: 14px 4px 13px;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            min-height: 70px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .quick-link-item:hover {
+            border-color: var(--primary);
+            background: rgba(0,102,141,0.12);
+        }
+
+        .quick-link-item .link-icon {
+            font-size: 1.2rem;
+            color: var(--primary);
+        }
+
+        .quick-link-item span {
+            font-size: 0.65rem;
+            color: var(--text-soft);
+            font-weight: 500;
+        }
+
+        .stream-banner {
+            margin: 0 20px 28px;
+            background: var(--bg-card);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-lg);
+            padding: 20px 20px 18px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .stream-banner .boost-tag {
+            display: inline-block;
+            background: var(--primary-dark);
+            color: #fff;
+            font-size: 0.65rem;
+            font-weight: 800;
+            padding: 5px 13px;
+            border-radius: 14px;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+
+        .stream-banner h4 {
+            font-size: 1.05rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .stream-banner p {
+            font-size: 0.78rem;
+            color: var(--text-dim);
+            margin-bottom: 16px;
+        }
+
+        .stream-banner .join-btn {
+            width: 100%;
+            background: transparent;
+            border: 1px solid var(--primary);
+            color: var(--primary);
+            padding: 12px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: 'Inter', sans-serif;
+        }
+
+        .stream-banner .join-btn:hover {
+            background: var(--primary-dark);
+            color: #fff;
+            border-color: var(--primary-dark);
+        }
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 800px;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            background: rgba(6, 16, 22, 0.95);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid var(--border-subtle);
+            z-index: 1000;
+            padding: 8px 0 10px;
+        }
+
+        .nav-item {
+            background: none;
+            border: none;
+            color: var(--text-dim);
+            font-size: 0.62rem;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            font-weight: 500;
+            font-family: 'Inter', sans-serif;
+            min-height: 52px;
+            position: relative;
+        }
+
+        .nav-item i {
+            font-size: 1.1rem;
+        }
+
+        .nav-item.active {
+            color: var(--primary);
+        }
+
+        .nav-item .nav-dot {
+            width: 5px;
+            height: 5px;
+            background: var(--primary);
+            border-radius: 50%;
+            opacity: 0;
+            position: absolute;
+            bottom: 2px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .nav-item.active .nav-dot {
+            opacity: 1;
+        }
+
+        .activation-popup-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(8px);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .activation-popup-content {
+            background: #0e1f28;
+            border: 1px solid var(--primary);
+            border-radius: 24px;
+            padding: 32px 24px 26px;
+            text-align: center;
+            width: 100%;
+            max-width: 360px;
+            box-shadow: 0 30px 50px rgba(0,0,0,0.7);
+            animation: popupFadeIn 0.3s ease;
+        }
+
+        @keyframes popupFadeIn {
+            from { transform: scale(0.95); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .popup-icon {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 14px;
+        }
+
+        .popup-message {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 22px;
+            line-height: 1.5;
+        }
+
+        .popup-amount {
+            color: #1cc749;
+            font-weight: 800;
+        }
+
+        .popup-btn {
+            background: var(--primary-dark);
+            color: #fff;
+            border: none;
+            padding: 13px 30px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: 'Inter', sans-serif;
+            box-shadow: 0 8px 18px rgba(0,0,0,0.4);
+        }
+
+        .popup-btn:hover {
+            background: #0077aa;
+        }
+
+        @media (max-width: 600px) {
+            .plan-card { padding: 18px 16px 20px; }
+            .quick-links-grid { gap: 8px; }
+            .quick-link-item { padding: 12px 2px 11px; }
+            .stats-row { gap: 8px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Top Bar -->
+        <div class="top-bar">
+            <div>
+                <div class="greeting" id="welcomeName">Hi!</div>
+                <div class="sub" id="userEmail">user@vireon.com</div>
+            </div>
+            <div class="top-bar-right">
+                <button class="notification-btn" id="notificationBtn">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification-badge">2</span>
+                </button>
+                <div class="avatar" id="userAvatar">V</div>
+            </div>
+            <!-- Notification Dropdown (now personalized) -->
+            <div class="notification-dropdown" id="notificationDropdown">
+                <div class="notif-item">
+                    <i class="fas fa-check-circle"></i>
+                    <span id="notifCongrats">Congratulations, you have created an account.</span>
+                </div>
+                <div class="notif-item">
+                    <i class="fas fa-gift"></i>
+                    <span id="notifWelcome">Welcome! Activate your account to receive your bonus.</span>
+                </div>
+                <button class="btn-notif-activate" id="notifActivateBtn">Activate Now</button>
+            </div>
+        </div>
+
+        <!-- Plan Card -->
+        <div class="plan-card">
+            <div class="plan-label">YOUR PLAN</div>
+            <div class="plan-badge" id="planBadge">Vireon Onboarding</div>
+            <div class="plan-price" id="earningsAmount">₦14,500</div>
+            <div class="plan-note" id="balanceNote">Start earning up to ₦12,000+ daily</div>
+            <div class="button-group">
+                <button class="btn-strong btn-primary go-payment"><i class="fas fa-arrow-up"></i> Withdraw</button>
+                <button class="btn-strong btn-secondary go-payment"><i class="fas fa-plus-circle"></i> Add Fund</button>
+            </div>
+        </div>
+
+        <!-- Stats Row -->
+        <div class="stats-row">
+            <div class="stat-chip go-payment">
+                <div class="stat-icon"><i class="fas fa-hand-holding-usd"></i></div>
+                <div class="stat-value">Apply</div>
+                <div class="stat-label">Access Loan</div>
+            </div>
+            <div class="stat-chip go-payment">
+                <div class="stat-icon"><i class="fas fa-gift"></i></div>
+                <div class="stat-value">Get</div>
+                <div class="stat-label">Claim Bonus</div>
+            </div>
+            <div class="stat-chip go-payment">
+                <div class="stat-icon"><i class="fas fa-crown"></i></div>
+                <div class="stat-value">Join</div>
+                <div class="stat-label">VIP Group</div>
+            </div>
+        </div>
+
+        <!-- Quick Links -->
+        <div class="section-header">
+            <h3>Quick Links</h3>
+            <span class="more go-payment">More <i class="fas fa-chevron-right"></i></span>
+        </div>
+        <div class="quick-links-grid">
+            <div class="quick-link-item go-payment"><div class="link-icon"><i class="fas fa-cloud-upload-alt"></i></div><span>Upload</span></div>
+            <div class="quick-link-item go-payment"><div class="link-icon"><i class="fas fa-file-download"></i></div><span>Scripts</span></div>
+            <div class="quick-link-item go-payment"><div class="link-icon"><i class="fas fa-video"></i></div><span>Livestreams</span></div>
+            <div class="quick-link-item go-payment"><div class="link-icon"><i class="fas fa-eye"></i></div><span>Watch & Earn</span></div>
+            <div class="quick-link-item go-payment"><div class="link-icon"><i class="fas fa-cube"></i></div><span>Loot Box</span></div>
+            <div class="quick-link-item go-payment"><div class="link-icon"><i class="fab fa-telegram"></i></div><span>Telegram</span></div>
+            <div class="quick-link-item go-payment"><div class="link-icon"><i class="fas fa-chart-bar"></i></div><span>Analytics</span></div>
+            <div class="quick-link-item go-payment"><div class="link-icon"><i class="fas fa-graduation-cap"></i></div><span>Academy</span></div>
+        </div>
+
+        <!-- Stream Banner -->
+        <div class="stream-banner">
+            <div class="boost-tag" id="boostBadge">x10 BOOST</div>
+            <h4>Join. Stream. Earn.</h4>
+            <p id="streamMessage">Join Livestreams on TikTok for x10 boost — paid in ₦</p>
+            <button class="join-btn go-payment">Join Vireon Stream</button>
+        </div>
+    </div>
+
+    <!-- Bottom Nav -->
+    <div class="bottom-nav">
+        <button class="nav-item active go-payment"><i class="fas fa-bolt"></i><span>Activate</span><div class="nav-dot"></div></button>
+        <button class="nav-item go-payment"><i class="fas fa-chart-line"></i><span>Access Loan</span><div class="nav-dot"></div></button>
+        <button class="nav-item go-payment"><i class="fas fa-wallet"></i><span>Withdraw</span><div class="nav-dot"></div></button>
+        <button class="nav-item go-payment"><i class="fas fa-user"></i><span>Profile</span><div class="nav-dot"></div></button>
+    </div>
+
+    <!-- Activation Popup -->
+    <div class="activation-popup-overlay" id="activationPopup">
+        <div class="activation-popup-content">
+            <div class="popup-icon"><i class="fas fa-gift"></i></div>
+            <h2 class="popup-message" id="popupMessage">
+                Activate Your Account to<br>Access Your <span class="popup-amount">₦14,500</span> Bonus
+            </h2>
+            <button class="popup-btn" id="popupOkBtn">Activate Now</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const userData = JSON.parse(localStorage.getItem('vireonUserData'));
+            if (!userData) {
+                alert('Please complete registration first');
+                window.location.href = 'form.html';
+                return;
+            }
+
+            const firstName = userData.fullName.split(' ')[0];
+            document.getElementById('welcomeName').textContent = `Hi, ${firstName}`;
+            document.getElementById('userEmail').textContent = userData.email;
+            const initials = userData.fullName.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+            document.getElementById('userAvatar').textContent = initials || 'V';
+
+            // Personalize notification messages with user's first name
+            document.getElementById('notifCongrats').innerHTML = `Congratulations, ${firstName}! You have created an account.`;
+            document.getElementById('notifWelcome').innerHTML = `Welcome, ${firstName}! Activate your account to receive your bonus.`;
+
+            const planPrice = parseInt(userData.planPrice) || 14500;
+            const isPlus = planPrice === 20000;
+
+            document.getElementById('earningsAmount').textContent = isPlus ? '₦20,000' : '₦14,500';
+            document.getElementById('planBadge').textContent = isPlus ? 'Vireon Premium Plus' : 'Vireon Onboarding';
+            document.getElementById('balanceNote').textContent = isPlus ?
+                'VIP perks • Higher limits • x15 boosts' :
+                'Start earning up to ₦12,000+ daily';
+            document.getElementById('boostBadge').textContent = isPlus ? 'x15 BOOST' : 'x10 BOOST';
+            document.getElementById('streamMessage').textContent = isPlus ?
+                'Join Livestreams for x15 boost — exclusive VIP benefit' :
+                'Join Livestreams on TikTok for x10 boost — paid in ₦';
+
+            const bonusAmount = isPlus ? '₦20,000' : '₦14,500';
+            document.getElementById('popupMessage').innerHTML =
+                `Activate Your Account to<br>Access Your <span class="popup-amount">${bonusAmount}</span> Bonus`;
+
+            // Notification dropdown
+            const notifBtn = document.getElementById('notificationBtn');
+            const notifDropdown = document.getElementById('notificationDropdown');
+            const notifActivateBtn = document.getElementById('notifActivateBtn');
+
+            notifBtn.addEventListener('click', function (e) {
+                e.stopPropagation();
+                notifDropdown.classList.toggle('show');
+            });
+
+            document.addEventListener('click', function (e) {
+                if (!notifDropdown.contains(e.target) && e.target !== notifBtn) {
+                    notifDropdown.classList.remove('show');
+                }
+            });
+
+            notifActivateBtn.addEventListener('click', function () {
+                notifDropdown.classList.remove('show');
+                goToPaymentForm();
+            });
+
+            function goToPaymentForm() {
+                window.location.href = 'paymentform.html';
+            }
+
+            const popup = document.getElementById('activationPopup');
+            const okBtn = document.getElementById('popupOkBtn');
+
+            function showPopup(e) {
+                e.preventDefault();
+                popup.style.display = 'flex';
+            }
+
+            document.querySelectorAll('.go-payment').forEach(el => {
+                el.addEventListener('click', showPopup);
+            });
+
+            okBtn.addEventListener('click', goToPaymentForm);
+
+            // Bottom nav active state
+            document.querySelectorAll('.nav-item').forEach(btn =>
+                btn.addEventListener('click', function () {
+                    document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                })
+            );
+        });
+    </script>
+</body>
+</html>
