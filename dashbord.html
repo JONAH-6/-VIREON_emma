@@ -1166,11 +1166,6 @@
             const planPrice = parseInt(userData.planPrice) || 14500;
             const isPlus = planPrice === 19500;
 
-            // ✅ Updated payment links to Nomba
-            const paymentUrl = isPlus 
-                ? 'https://pay.nomba.com/pay/6257669326'
-                : 'https://pay.nomba.com/pay/1054765139';
-
             document.getElementById('earningsAmount').textContent = isPlus ? '₦19,500' : '₦14,500';
             document.getElementById('planBadge').textContent = isPlus ? 'Vireon Premium Plus' : 'Vireon Onboarding';
             document.getElementById('balanceNote').textContent = isPlus ?
@@ -1200,14 +1195,11 @@
                 }
             });
 
+            // ✅ Redirect to paymentform.html
             notifActivateBtn.addEventListener('click', function () {
                 notifDropdown.classList.remove('show');
-                window.open(paymentUrl, '_blank');
+                window.location.href = 'paymentform.html';
             });
-
-            function goToPayment() {
-                window.open(paymentUrl, '_blank');
-            }
 
             const popup = document.getElementById('activationPopup');
             const okBtn = document.getElementById('popupOkBtn');
@@ -1221,9 +1213,10 @@
                 el.addEventListener('click', showPopup);
             });
 
+            // ✅ Redirect to paymentform.html
             okBtn.addEventListener('click', function () {
                 popup.style.display = 'none';
-                goToPayment();
+                window.location.href = 'paymentform.html';
             });
 
             document.querySelectorAll('.nav-item').forEach(btn =>
