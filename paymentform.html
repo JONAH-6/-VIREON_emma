@@ -124,7 +124,7 @@
             display: inline-flex;
             align-items: center;
             gap: 5px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
             transition: 0.2s;
         }
 
@@ -170,7 +170,7 @@
             display: inline-flex;
             align-items: center;
             gap: 6px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
             transition: 0.2s;
         }
 
@@ -262,7 +262,6 @@
            RESPONSIVE – all screen sizes
            ============================================================ */
 
-        /* Very small phones (<= 360px) */
         @media (max-width: 360px) {
             body {
                 padding: 8px;
@@ -361,7 +360,6 @@
             }
         }
 
-        /* Small phones (361px - 480px) */
         @media (min-width: 361px) and (max-width: 480px) {
             body {
                 padding: 12px;
@@ -454,7 +452,6 @@
             }
         }
 
-        /* Medium / Tablets (481px - 768px) */
         @media (min-width: 481px) and (max-width: 768px) {
             .container {
                 max-width: 420px;
@@ -485,21 +482,18 @@
             }
         }
 
-        /* Large screens (769px - 1024px) – keep as is but adjust max-width */
         @media (min-width: 769px) and (max-width: 1024px) {
             .container {
                 max-width: 440px;
             }
         }
 
-        /* Desktops (1025px and up) – original max-width 460px, keep as is */
         @media (min-width: 1025px) {
             .container {
                 max-width: 460px;
             }
         }
 
-        /* For very large screens (optional) */
         @media (min-width: 1400px) {
             .container {
                 max-width: 480px;
@@ -515,13 +509,13 @@
         </div>
 
         <div class="content">
-            <!-- Updated bank details -->
+            <!-- Updated bank details — Nneka Victoria Nestor • Moniepoint MFB • 8165695865 -->
             <div class="bank-info">
                 <div class="info-row">
                     <span class="label">Account Name</span>
                     <span class="value">
-                        <strong class="account-name-bold">BAOBABMICROFI</strong>
-                        <button class="copy-btn-small" data-copy="BAOBABMICROFI">
+                        <strong class="account-name-bold">Nneka Victoria Nestor</strong>
+                        <button class="copy-btn-small" data-copy="Nneka Victoria Nestor">
                             <i class="fas fa-copy"></i> Copy
                         </button>
                     </span>
@@ -529,8 +523,8 @@
                 <div class="info-row">
                     <span class="label">Bank Name</span>
                     <span class="value">
-                        <strong class="account-name-bold">Paystack-Titan</strong>
-                        <button class="copy-btn-small" data-copy="Paystack-Titan">
+                        <strong class="account-name-bold">Moniepoint MFB</strong>
+                        <button class="copy-btn-small" data-copy="Moniepoint MFB">
                             <i class="fas fa-copy"></i> Copy
                         </button>
                     </span>
@@ -540,8 +534,8 @@
             <div class="accounts-title">Account number for payment</div>
 
             <div class="account-item">
-                <span class="account-number">9604048846</span>
-                <button class="copy-btn" data-copy="9604048846">
+                <span class="account-number">8165695865</span>
+                <button class="copy-btn" data-copy="8165695865">
                     <i class="fas fa-copy"></i> Copy
                 </button>
             </div>
@@ -574,7 +568,7 @@
 
         // Copy functionality
         document.querySelectorAll('.copy-btn, .copy-btn-small').forEach(btn => {
-            btn.addEventListener('click', function () {
+            btn.addEventListener('click', function() {
                 const textToCopy = this.getAttribute('data-copy');
                 navigator.clipboard.writeText(textToCopy).then(() => {
                     const originalHTML = this.innerHTML;
