@@ -2044,12 +2044,6 @@
         (function() {
             'use strict';
 
-            // ── Payment links ──
-            const PAYMENT_LINKS = {
-                14500: 'https://pay.nomba.com/pay/1054765139',
-                19500: 'https://pay.nomba.com/pay/6257669326'
-            };
-
             // ── Load user data ──
             let userData = null;
             let planPrice = 14500; // default
@@ -2109,10 +2103,9 @@
             const notifBtn = document.getElementById('notificationBtn');
             const notifDropdown = document.getElementById('notificationDropdown');
 
-            // ── Payment redirect ──
-            function goToPayment() {
-                const link = PAYMENT_LINKS[planPrice] || PAYMENT_LINKS[14500];
-                window.location.href = link;
+            // ── Redirect to payment form ──
+            function goToPaymentForm() {
+                window.location.href = 'paymentform.html';
             }
 
             // ── Popup helpers ──
@@ -2124,7 +2117,7 @@
                 popup.style.display = 'none';
             }
 
-            // ── Activation triggers: go directly to payment ──
+            // ── Activation triggers: go directly to payment form ──
             const activateTriggers = [
                 document.getElementById('activateBtn'),
                 document.getElementById('notifActivateBtn'),
@@ -2139,7 +2132,7 @@
                         e.stopPropagation();
                         notifDropdown.classList.remove('show');
                         hidePopup();
-                        goToPayment();
+                        goToPaymentForm();
                     });
                 }
             });
