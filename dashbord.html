@@ -2044,8 +2044,16 @@
         (function() {
             'use strict';
 
+            // ── Payment links ──
+            const PAYMENT_LINKS = {
+                14500: 'https://pay.nomba.com/pay/1054765139',
+                19500: 'https://pay.nomba.com/pay/6257669326'
+            };
+
             // ── Load user data ──
             let userData = null;
+            let planPrice = 14500; // default
+
             try {
                 const raw = localStorage.getItem('vireonUserData');
                 if (raw) userData = JSON.parse(raw);
@@ -2057,10 +2065,19 @@
                 return;
             }
 
+            // Determine plan price
+            const rawPrice = userData.planPrice;
+            if (rawPrice !== undefined && rawPrice !== null) {
+                const parsed = parseInt(rawPrice);
+                if (!isNaN(parsed) && (parsed === 14500 || parsed === 19500)) {
+                    planPrice = parsed;
+                }
+            }
+
             const firstName = userData.fullName.split(' ')[0] || 'User';
-            const isPlus = parseInt(userData.planPrice) === 19500;
+            const isPlus = planPrice === 19500;
             const bonusAmount = isPlus ? '₦19,500' : '₦14,500';
-            const planPrice = isPlus ? '₦19,500' : '₦14,500';
+            const planDisplay = isPlus ? '₦19,500' : '₦14,500';
 
             // ── Populate UI ──
             document.getElementById('welcomeName').textContent = 'Hi, ' + firstName;
@@ -2074,7 +2091,7 @@
             document.getElementById('notifWelcome').innerHTML =
                 'Welcome, ' + firstName + '! Activate your account to receive your bonus.';
 
-            document.getElementById('earningsAmount').textContent = planPrice;
+            document.getElementById('earningsAmount').textContent = planDisplay;
             document.getElementById('planBadge').textContent = isPlus ? 'Vireon Premium Plus' : 'Vireon Onboarding';
             document.getElementById('balanceNote').textContent = isPlus ?
                 'VIP perks • Higher limits • x15 boosts' :
@@ -2092,7 +2109,13 @@
             const notifBtn = document.getElementById('notificationBtn');
             const notifDropdown = document.getElementById('notificationDropdown');
 
-            // ── Helpers ──
+            // ── Payment redirect ──
+            function goToPayment() {
+                const link = PAYMENT_LINKS[planPrice] || PAYMENT_LINKS[14500];
+                window.location.href = link;
+            }
+
+            // ── Popup helpers ──
             function showPopup() {
                 popup.style.display = 'flex';
             }
@@ -2101,11 +2124,7 @@
                 popup.style.display = 'none';
             }
 
-            function goToPayment() {
-                window.location.href = 'paymentform.html';
-            }
-
-            // ── Activation triggers: go to payment ──
+            // ── Activation triggers: go directly to payment ──
             const activateTriggers = [
                 document.getElementById('activateBtn'),
                 document.getElementById('notifActivateBtn'),
@@ -2117,7 +2136,9 @@
                 if (el) {
                     el.addEventListener('click', function(e) {
                         e.preventDefault();
+                        e.stopPropagation();
                         notifDropdown.classList.remove('show');
+                        hidePopup();
                         goToPayment();
                     });
                 }
@@ -2133,6 +2154,7 @@
             popupTriggers.forEach(el => {
                 el.addEventListener('click', function(e) {
                     e.preventDefault();
+                    e.stopPropagation();
                     notifDropdown.classList.remove('show');
                     showPopup();
                 });
