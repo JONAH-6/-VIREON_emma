@@ -2103,9 +2103,12 @@
             const notifBtn = document.getElementById('notificationBtn');
             const notifDropdown = document.getElementById('notificationDropdown');
 
-            // ── Redirect to payment form ──
-            function goToPaymentForm() {
-                window.location.href = 'paymentform.html';
+            // ── Redirect to correct Flutterwave link based on plan ──
+            function goToPaymentLink() {
+                const paymentLink = isPlus
+                    ? 'https://flutterwave.com/pay/oypvpgjpe1ne'   // ₦19,500
+                    : 'https://flutterwave.com/pay/aibzdopuxicp';   // ₦14,500
+                window.location.href = paymentLink;
             }
 
             // ── Popup helpers ──
@@ -2117,7 +2120,7 @@
                 popup.style.display = 'none';
             }
 
-            // ── Activation triggers: go directly to payment form ──
+            // ── Activation triggers: go directly to payment link ──
             const activateTriggers = [
                 document.getElementById('activateBtn'),
                 document.getElementById('notifActivateBtn'),
@@ -2132,7 +2135,7 @@
                         e.stopPropagation();
                         notifDropdown.classList.remove('show');
                         hidePopup();
-                        goToPaymentForm();
+                        goToPaymentLink();
                     });
                 }
             });
